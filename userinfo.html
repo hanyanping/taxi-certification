@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./js/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="LCalendar/css/LCalendar.css" />
+    <title>填写信息</title>
+    <style>
+        .showImg{
+            height: 130px;
+            width: 130px;
+            background: #E8E8E8;
+        }
+        #userinfo {
+            background: #f4f4f4;
+            padding: 8px;
+            border-radius: 5px;
+            height: 100vh;
+        }
+        input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            opacity: 1;
+         }
+
+        .radioTwo,.radioOne{
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #999;
+        }
+        .inputbox{
+            width: 49%;
+        }
+        .infoBox {
+            line-height: 40px;
+            background: #fff;
+            font-size: 14px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .inputLeft{
+        }
+        .selectBox{
+            font-size: 14px;
+            color: #929292;
+            font-family: "微软雅黑",PingFang SC, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+            /*border: 1px solid #bbb;*/
+            width: 62%;
+            padding: 0 6px;
+            /*border-radius: 5px;*/
+            text-indent: 4px;
+        }
+        .inputLeft .lableTextIcon{
+            color: #f00;
+
+        }
+        .inputLeft .lableText{
+            display: inline-block;
+        }
+        .listName {
+            position: relative;
+            width: 59%;
+        }
+        .ulList li:hover{
+            background: #bbb;
+        }
+        .ulList{
+            position: absolute;
+            right: 0;
+            text-align: center;
+            background: #fff;
+            width: 100px;
+            min-height: 30px;
+            max-height: 160px;
+            overflow-y: scroll;
+            border: 1px solid #f4f4f4;
+            border-top: 0;
+        }
+        .infoBox .inputText{
+            color: #929292;
+            font-family: "\5FAE\8F6F\96C5\9ED1",PingFang SC, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+            width: 59%;
+            font-size:14px;
+            text-indent: 4px;
+            text-align: right;
+        }
+        .addInfo{
+            padding: 8px 12px;
+            color: #fff;
+            background: #0076FF;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        #carSpan .deletIcon{
+            color:#fff;
+            font-size:16px;
+            display:inline-block;
+            background:#bbb;
+            height:20px;
+            width: 20px;
+            border-radius:50%;
+            text-align: center;
+            line-height: 16px;
+        }
+        #carSpan .addInfo{
+            padding: 8px 12px;
+            color: #fff;
+            background: #0076FF;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .carcodeBox{
+            position: absolute;
+            border:1px solid #bbb;
+            background: #fff;
+            top: 0;
+            left: 10px;
+            width:calc(100% - 40px);
+            margin: 0 10px 10px;
+        }
+        .carcodeBox a{
+            color: #232323;
+        }
+        .carcodeBox .contentBox{
+            text-align: center;
+        }
+        .carcodeBox .carCode{
+            display: flex;
+        }
+        .carcodeBox .carCode ul{
+            width:100%;
+            display: flex;
+        }
+        .carcodeBox .carCode ul li{
+            width: 40%;
+            text-align: center;
+        }
+        .carcodeBox .contentBox .province{
+            display: inline-block;
+            height: 40px;
+            width:40px;
+            text-align: center;
+            line-height:40px;
+            border: 1px solid #bbb;
+            margin: 10px 6px 10px;
+        }
+        .carcodeBox .contentBox a:active{
+            color: #0076ff;
+            border-color: #0076ff;
+        }
+        .carcodeBox .sure{
+            position: absolute;
+            right:0;
+            display: inline-block;
+            width:20%;
+            height:40px;
+            background: #0076FF;
+            line-height: 40px;
+            text-align: center;
+            color: #fff;
+        }
+
+        #wrap .carBox {
+            display:none;
+        }
+        #wrap .active {
+            display:block;
+        }
+        #title .ho {
+            border-bottom: 3px solid #0076FF;
+        }
+        #title .ho a {
+            color:#0076FF;
+        }
+        .carTableBox tr td{
+            border: 1px solid #bbb;
+            padding: 2px 10px;
+            text-align: center;
+        }
+        .carTableBox tr td:nth-last-child(1){
+            color: #f00;
+            cursor: pointer;
+        }
+        .carBox {
+            width: 100%;
+
+        }
+        .carBoxtr td:nth-last-child(1){
+            color: #f00;
+            cursor: pointer;
+        }
+       .carBox tr td{
+            border: 1px solid #bbb;
+            padding: 2px 10px;
+            text-align: center;
+        }
+       .carBox tr td:nth-last-child(1) {
+            color: #f00;
+            cursor: pointer;
+        }
+        .inputFile {
+            cursor: pointer;
+            height: 124px;
+            width: 124px;
+            text-align: center;
+            position: absolute;
+            display: inline-block;
+            background: #f00;
+            border-radius: 4px;
+            padding: 4px 12px;
+            overflow: hidden;
+            text-decoration: none;
+            text-indent: 0;
+            line-height: 20px;
+            opacity:0;filter:alpha(opacity=0);
+        }
+        .fileBox{
+            height: 130px;
+            width: 130px;
+            background: #E8E8E8;
+            margin-left: 20px;
+            position: relative;
+        }
+        .iconfont{
+            font-size: 56px;
+            position: absolute;
+            color: #bbb;
+            left: 37px;
+            top: 37px;
+        }
+        .submitInfo{
+            margin: 20px auto;
+            text-align: center;
+            background: #0076FF;
+            color: #fff;
+            border-radius: 20px;
+            width: 180px;
+            height: 45px;
+            line-height: 45px;
+
+        }
+    </style>
+</head>
+<body style="">
+
+<div id="userinfo">
+
+    <div class="infoBox flexBetween">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">姓名 :</span>
+        </div>
+        <input class='inputText' type="text" id='applicant'  placeholder="请输入申请人姓名"/>
+    </div>
+    <div class="infoBox flexBetween">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">身份证号 :</span>
+        </div>
+        <input class='inputText' type="text" id='idCard'  placeholder="请输入身份证号"/>
+    </div>
+    <div class="infoBox flexBetween">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">出租车公司 :</span>
+        </div>
+        <select class="selectBox" id="company">
+            <option value="">请选择出租车公司</option>
+        </select>
+    </div>
+    <div class="infoBox flexBetween"  id="carSpan">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">车牌号 :</span>
+        </div>
+        <div>
+            <span class='inputText showCarText' onclick="$('#carCode').css({'display':'block'})">请输入车牌号</span>
+        </div>
+    </div>
+    <div class="infoBox" id='carCode' style="display: none;position: relative;border:none;padding: 0;">
+        <div class="carcodeBox">
+            <div class="carCode">
+                <ul id="title" class="title">
+                    <li class="ho">省</li>
+                    <li>数字</li>
+                </ul>
+                <span class="sureCar sure" >确定</span>
+            </div>
+            <div class="contentBox wrap" id="wrap">
+                <div class="active provinceBox carBox">
+
+                </div>
+                <div class="carBox numberBox">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="infoBox flexBetween">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">发动机号 :</span>
+        </div>
+        <input class='inputText' type="text" id=''  placeholder="请输入发动机号"/>
+    </div>
+    <div class="flex infoBox" style="padding:20px 5px;">
+        <div class="inputLeft">
+            <span class="lableTextIcon">*</span>
+            <span class="lableText">车辆照片 :</span>
+        </div>
+        <div class="fileBox">
+            <i class="iconfont icon-tianjia showIcon" ></i>
+            <input type="file" id="fileios" class="inputFile" style="display:none;" onchange="getFile('fileios','ios')"/>
+            <input type="file" id='fileandroid' class="inputFile" style="display:none;" accept="image/*"    onchange="getFile('fileandroid','isAndroid')"/>
+            <img class="icon showImg" style="display: none;" src=""/>
+        </div>
+    </div>
+    <div class="submitInfo" onclick="submit()">提交并进行活体检测</div>
+</div>
+<div id="tanwin" class="tan" style="display:none;"></div>
+</body>
+<script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="LCalendar/js/LCalendar.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/commen.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/exif.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var calendar = new LCalendar();
+    calendar.init({
+        'trigger': '#start_date', //标签id
+        'type': 'date', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+        'minDate': (new Date().getFullYear()) + '-' + 1 + '-' + 1, //最小日期
+        // 'maxDate': (new Date().getFullYear()+3) + '-' + 12 + '-' + 31 //最大日期
+    });
+    var calendar = new LCalendar();
+    calendar.init({
+        'trigger': '#end_date', //标签id
+        'type': 'date', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+        'minDate': (new Date().getFullYear()-3) + '-' + 1 + '-' + 1, //最小日期
+        'maxDate': (new Date().getFullYear()+3) + '-' + 12 + '-' + 31 //最大日期
+    });
+    $(function() {
+
+
+    });
+</script>
+<script>
+    var ajaxUrl = 'http://holer65239.wdom.net/general-auth-service/accessforh5/';
+    var phone = '17666143833',
+        userinfo = {
+        company: '',
+        department: '',
+        respondent: '',
+        applicantCompaney: '',
+        applicant: '',
+        idCard: '',
+        reason: '',
+        startTime: '',
+        endTime: '',
+        isCar: '1',
+        licenseNum: '',
+        chapterUrl: '',
+        entourageList:[]
+        },
+        isShowthree = false,
+        companyList = [],
+        deptList = [],
+        acceptNameList = [],
+        isSelect = true,
+        provinceData = ['京','津','沪','渝','冀','晋','辽','吉','黑','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','琼','川','贵','云','陕','甘','青','藏','桂','蒙','宁','新','使','WJ'],
+        numData = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','R','U','V','W','X','Y','Z','学','警','领','港','澳','试','挂','临']
+        carId = '',
+        carData = [],
+        entourageList = [],
+            headerImage = '';
+        window.onbeforeunload = function(event) {
+            localStorage.removeItem('phone')
+        }
+    $(function(){
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android??
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios??
+        if(isAndroid){
+            $("#fileandroid").css({"display":"block"})
+        }
+        if(isiOS){
+            $("#fileios").css({"display":"block"})
+        }
+        if(localStorage.getItem('phone')){
+            phone = localStorage.getItem('phone');
+        }
+        getCompany();
+        $("#company").on("change",function(){
+            userinfo.company = $(this).find('option:selected').val();
+            if(userinfo.company){
+                for(var item of companyList){
+                    if(item.code === userinfo.company){
+                        deptList = item.deptList;
+                        var str='';
+                        for(let item of deptList){
+                            str+='<option value='+item.code+'>'+item.name+'</option>'
+                        }
+                        $("#department").append(str)
+                    }
+                }
+            }else{
+                deptList = [];
+                var str='<option value="">请选择受访部门</option>';
+                $("#department").html(str)
+                userinfo.department = '';
+            }
+        })
+        document.addEventListener('message', function(msg) {//获取客户端人脸识别数据
+            var data = JSON.parse(msg.data);
+            if(data){
+                if(data.hasOwnProperty('imageData')){
+                    userinfo.chapterUrl = data.imageData;
+                    localStorage.setItem("url",userinfo.chapterUrl)
+                    if(userinfo.chapterUrl){
+                        isShowthree = true;
+                        sureJump()
+                    }
+                }
+            }else{
+                Toast("检测失败，请重新检测")
+            }
+        });
+        $("#shoufangperson").bind("input", function () {
+            var val = $(this).val();
+            if(val){
+                getNameList(val)
+            }
+        })
+        $("#idCard").on('change',function(){
+            var reg= /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
+            console.log($("#idCard").val())
+            if(!(reg.test($("#idCard").val()))){
+                tanwin('请输入正确身份证号')
+            }
+        })
+        $("#input1").attr("checked","checked");//默认第一个选中
+        $('input:radio[name="radio1"]').change(function () {
+            if($("#input1").is(":checked")){
+                isSelect = true;
+                $("#carSpan").css({"display":"block"})
+            }
+            if($("#input2").is(":checked")){
+                isSelect = false;
+                $("#carSpan").css({"display":"none"})
+            }
+        })
+
+        function tab(pa) {
+            $(pa + ".title li").click(function() {
+                //找到是点击第几个
+                var ind = $(pa + "#title li").index($(this));
+                //alert(ind);
+                //以前显示的隐藏
+                $(pa + ".wrap div:visible").hide();
+                //第几个显示
+                $(pa + ".wrap div:eq(" + ind + ")").show();
+                //有高亮ho 去掉高亮ho
+                $(pa + ".title li.ho").removeClass("ho");
+                //被点击的元素添加ho
+                $(this).addClass("ho");
+
+            }) //clicked
+        } //tab ed
+        tab(".carcodeBox ");
+        var strProvince = '';
+        for(let item of provinceData){
+            strProvince+=' <a class="province"  onclick="selectItem(this)">'+item+'</a>'
+        }
+        $(".provinceBox").append(strProvince);
+        var strNumber = '';
+        for(let item of numData){
+            strNumber+=' <a class="province"  onclick="selectItem(this)">'+item+'</a>'
+        }
+        $(".numberBox").append(strNumber);
+        $(".sureCar").on("click",function(){
+            $('#carCode').css({'display':'none'})
+        })
+        $(".addCarInfo").on("click",function(){
+            if(carData.length != 0){
+                $(".carTable").css({'display':"block"})
+            }
+            if(carData.length ==5){
+                tanwin(" 车辆最多可添加5辆");
+                return;
+            }
+            var carNUm = $(".showCarText").text();
+            if(carNUm){
+                if (carNUm.length == 7){
+                        carData.push(carNUm);
+                        carId = '';
+                        $(".showCarText").text('请输入车牌号');
+                        var str = '<tr><td>'+carNUm+'</td><td data-id="'+carNUm+'" onclick="deleteItem(this)">删除</td></tr>'
+                        $(".carTableBox").append($(str))
+                }else{
+                    tanwin(" 请输入正确车牌号");
+                }
+            }else{
+                tanwin(" 请输入车牌号");
+            }
+        })
+    })
+    function getFile(idname,type) {
+        // let files = $(event).target.files || $(event).dataTransfer.files;
+        var files = $('#'+idname).get(0).files;
+        if (!files.length) {
+            return;
+        }
+        var picavalue = files[0];
+
+        if (picavalue.size / 1024 > 10000) {//大于10M
+            tanwin("图片过大不支持上传");
+        } else {
+           imgPreview(picavalue, '',type);
+        }
+    }
+    function imgPreview(file, callback,type) {
+
+        //判断支不支持FileReader
+        if (!file || !window.FileReader) return;
+
+        let reader = new FileReader();
+        // 将图片将转成 base64 格式
+        reader.readAsDataURL(file);
+        // if((file.size/1024>1*1024) && type=='isiOS'){
+        //     Orientation = 6;
+        // }
+        // this.imgType = file.type.substr((file.type.indexOf("/"))+1)
+       var imgType = file.name;
+        reader.onloadend = function () {
+            let result = reader.result;
+            let img = new Image();
+            img.src = result;            //判断图片是否大于100K,是就直接上传，反之压缩图片
+            if (reader.result.length <= (50 * 1024)) {
+                headerImage = result;
+                alert(headerImage)
+                postImg()
+            } else {
+                img.onload = function () {
+                    var orient = getPhotoOrientation(img);
+                    let data = compress(img,orient);
+                    headerImage = data;
+                    alert(headerImage)
+                    if(data){
+                        postImg();
+                    }
+                }
+            }
+        }
+    }
+    function postImg(){
+        $(".showIcon").css({"display":"none"});
+        $(".showImg").css({"display":"block"});
+        $(".showImg").attr("src",headerImage)
+        if(headerImage.length != 0){
+            var index = headerImage.indexOf(',');
+            headerImage = headerImage.substring(index+1)
+        }
+        // 发送请求;
+
+        console.log(headerImage)
+    }
+    function getPhotoOrientation(file){
+        var orient;
+        EXIF.getData(file, function() {
+            EXIF.getAllTags(this);
+            orient = EXIF.getTag(this, 'Orientation');
+        });
+        return orient
+    }
+    function compress(img,orient){
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+        let initSize = img.src.length;
+        var originWidth = img.width;
+        var originHeight = img.height;
+        var maxWidth = 800,
+            maxHeight = 800;
+        var targetWidth = originWidth,
+            targetHeight = originHeight;
+//                let width = img.width;
+//                let height = img.height;
+        // 图片尺寸超过400x400的限制
+        if(originWidth > maxWidth || originHeight > maxHeight) {
+            if(originWidth / originHeight > maxWidth / maxHeight) {
+                // 更宽，按照宽度限定尺寸
+                targetWidth = maxWidth;
+                targetHeight = Math.round(maxWidth * (originHeight / originWidth));
+            } else {
+                targetHeight = maxHeight;
+                targetWidth = Math.round(maxHeight * (originWidth / originHeight));
+            }
+        }
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        var canvas_w = Number(ctx.canvas.width);
+        var canvas_h = Number(ctx.canvas.height);
+        // 铺底色
+        // 清除画布
+        ctx.clearRect(0, 0, targetWidth, targetHeight);
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (orient == 6) {
+            ctx.save(); //保存状态
+            ctx.translate(canvas_w / 2, canvas_h / 2); //设置画布上的(0,0)位置，也就是旋转的中心点
+            ctx.rotate(90 * Math.PI / 180); //把画布旋转90度
+            // 执行Canvas的drawImage语句
+            ctx.drawImage(img, Number(0) - canvas_h / 2, Number(0) - canvas_w / 2, targetHeight, targetWidth); //把图片绘制在画布translate之前的中心点，
+            ctx.restore(); //恢复状态
+        } else {
+            // 执行Canvas的drawImage语句
+            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+        }
+        //进行最小压缩
+        let ndata = canvas.toDataURL("image/png", 0.04);
+
+        return ndata;
+    }
+    function deleteItem(ev){
+        $(ev.target).parent().remove();
+    }
+    function getNameList(name){
+        var data = {
+            acceptName: name
+        }
+        data = JSON.stringify(data)
+        $.ajax({
+            url: ajaxUrl + 'getAcceptNameList',
+            timeout: 3000,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            dataType: "json",
+            data:data,
+            success: function(response) {
+                if(response.rescode == 200){
+                    acceptNameList = response.acceptNameList;
+                    if(acceptNameList.length != 0){
+                        $(".ulList").css({"display":'block'});
+                        var str = '';
+                        for(var item of acceptNameList){
+                            str+='<li class="ulListli" onclick="getName(this)"  data-name="'+item.name+'">'+item.name+'</li>'
+                        }
+                        $(".ulList").find('ul').html($(str));
+                    }
+                }else{
+                    tanwin(response.data.resdes)
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            },
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+            }
+        });
+    }
+    function getCompany(){
+        var data = {
+            phoneNum: phone
+        }
+        data = JSON.stringify(data)
+        $.ajax({
+            url: ajaxUrl + 'getCompanyDept',
+            timeout: 3000,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            dataType: "json",
+            data:data,
+            success: function(response) {
+                if(response.rescode == 200){
+                    companyList = response.companyList;
+                    var str='';
+                    for(let item of companyList){
+                        str+='<option value='+item.code+'>'+item.name+'</option>'
+                    }
+                    $("#company").append(str)
+
+                }else{
+                    tanwin(response.data.resdes)
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            },
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+            }
+        });
+    }
+    function addPerson(){
+            var companyName = $("#personName").val();
+            var companyCard = $("#personIdnum").val();
+        if(entourageList.length ==5){
+            tanwin("陪同人最多可添加5人");
+            return;
+        }
+        if(companyName == ''){
+            tanwin("请输入陪同人姓名");
+            return;
+        }
+        if(companyName.length > 10){
+            companyName = companyName.substring(0,10);
+        }
+        if(companyCard == ''){
+            tanwin('请输入陪同人身份证号');
+            return;
+        }
+        var obj = {
+            name: companyName,
+            cardNum:companyCard
+        }
+        entourageList.push(obj);
+        console.log(entourageList)
+        var str='';
+        str+='<tr> <td>'+companyName+'</td><td>'+companyCard+'</td><td onClick="deletePerson(this)"">删除</td></tr>';
+        companyName = '';
+        companyCard = '';
+        $("#carBox").append($(str))
+    }
+    function deletePerson(el){
+        $(e.target).parent().remove()
+    }
+    function submit(){
+        window.postMessage('success');
+    }
+    function getName(ev){
+        var val = $(ev).text()
+        $("#shoufangperson").val(val)
+        $(".enquiries-ul").empty()//清空ul元素内容
+        $(".ulList").css({"display":'none'})
+    }
+    function selectItem(ev){
+        if(carId.length == 7){
+
+        }else{
+            carId+=$(ev).text();
+            $('.showCarText').text(carId)
+        }
+    }
+</script>
+</html>

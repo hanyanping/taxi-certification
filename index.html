@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./js/iconfont.css">
+    <title>门禁管理系统</title>
+    <style>
+        #home{
+            background: #f4f4f4;
+            font-family: "微软雅黑",PingFang SC, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+            width:100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .homeList{
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+        }
+        .homeList img{
+            height: 50px;
+            width:50px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .homeList span{
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 50px;
+            font-size: 16px;
+            color: #232323;
+        }
+        .homeList .leftBox .title{
+            color: #232323;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        .leftBox .titleText{
+            color: #232323;
+            font-size: 14px;
+        }
+        .homeList .iconfont{
+            color:#0076FF;
+            font-size: 50px;
+        }
+        .goUserinfo{
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            text-align: center;
+            display: block;
+        }
+      .goUserinfo  .iconfont{
+          font-size: 90px;
+          color: #bbb;
+      }
+        .infoWarm{
+            margin: 30px 0;
+            font-size: 14px;
+            color: #232323;
+        }
+    </style>
+    <script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="home">
+    <a class="goUserinfo" href="./userinfo.html">
+        <i class="iconfont icon-tianjia"></i>
+        <div class="infoWarm">在出租车实名认证申请</div>
+    </a>
+    <a class="homeList flexBetween" href="./userinfo.html" >
+        <div class="leftBox">
+            <p class="title">使用指南</p>
+            <p class="titleText">出租车实名认证系统使用说明</p>
+        </div>
+        <i class="iconfont icon-shiyongzhinan"></i>
+    </a>
+    <a class="homeList flexBetween" >
+        <div class="leftBox">
+            <p class="title">扫脸过检记录
+            </p>
+            <p class="titleText">展示扫脸通过记录</p>
+        </div>
+        <i class="iconfont icon-lishijilu"></i>
+    </a>
+</div>
+</body>
+<script>
+    window.onload = function() {
+        document.addEventListener('message', function(msg) {
+            var data = JSON.parse(msg.data)
+            if(data.hasOwnProperty('phoneNum')){
+                localStorage.setItem('phone',data.phoneNum)
+            }
+        });
+    }
+</script>
+</html>

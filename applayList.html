@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <title>历史申请记录</title>
+    <style>
+        #home{
+            background: #f4f4f4;
+            font-family: "微软雅黑",PingFang SC, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+            width:100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .homeList{
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+        }
+        .homeList img{
+            height: 50px;
+            width:50px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .homeList span{
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 50px;
+            font-size: 16px;
+            color: #232323;
+        }
+        #div1 {
+            width:100px; height:100px;
+            background-color:black;
+        }
+    </style>
+    <script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<input type="button" id="btnSlideDown" value="下拉"/>
+<input type="button" id="btnSlideUp" value="收起"/>
+<input type="button" id="btnTotal" value="合成"/>
+<div id="div1"></div>
+<div id="home">
+
+</div>
+</body>
+<script>
+    $(function() {
+        //下拉按钮
+        $('#btnSlideDown').click(function(){
+            //$('#div1').slideDown();
+            $('#div1').slideDown(200);  //1000毫秒，表示动画下拉过程时间。
+        });
+
+        //收起按钮
+        $('#btnSlideUp').click(function(){
+            //$('#div1').slideUp();
+            $('#div1').slideUp(200);
+        });
+
+        //合成按钮
+        $('#btnTotal').click(function(){
+            //$('#div1').slideToggle();
+            $('#div1').slideToggle(1000);
+        });
+    });
+
+
+
+
+
+    $(function(){
+
+
+
+        var  listdata = [
+            {'name':'预约申请',icon:'./images/shenqing.png',router: './userinfo.html'},
+            {'name':'历史申请记录',icon:'./images/liebiao.png',router: './applayList.html'}];
+        var str = '';
+        for(let item of listdata){
+            str+='<div class="homeList flexBetween" onclick="goRouter(this)" data-router='+item.router+'><span>'+item.name+'</span><img src='+item.icon+'></div>'
+        }
+        $("#home").append($(str))
+    })
+    function goRouter(even){
+        console.log($(even).attr("data-router"))
+        window.location.href = $(even).attr("data-router")
+    }
+</script>
+</html>
