@@ -54,6 +54,12 @@
             text-align: center;
             display: block;
         }
+        .showUserinfo{
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            text-align: center;
+        }
       .goUserinfo  .iconfont{
           font-size: 90px;
           color: #bbb;
@@ -63,16 +69,88 @@
             font-size: 14px;
             color: #232323;
         }
+        .userInfo{
+            text-align: left;
+        }
+        .userInfo .infoBox{
+            padding: 5px 0;
+        }
+        .imgInfo .cardPhotoUrl{
+            width: 101px;
+            height: 138px;
+        }
+        .statusIcon{
+            height: 40px;
+            width: 40px;
+            margin-right:10px;
+        }
+        .auditStatusName{
+           text-align: left;
+            color:#E51C23;
+            padding-bottom:6px;
+            font-size: 16px;
+        }
+        .validTimeBox{
+            text-align: left;
+            font-size: 14px;
+            color: #232323;
+        }
+        .reApplay{
+            display: block;
+            position: absolute;
+            right: 20px;
+            font-size: 16px;
+            top: 30px;
+            color: #2A5AE8;
+            text-decoration-line: blink;
+
+        }
+        .refresh{
+            display: block;
+            position: absolute;
+            right: 20px;
+            font-size: 16px;
+            top: 30px;
+            color: #2A5AE8;
+            text-decoration-line: blink;
+        }
     </style>
+    <script src="./js/commen.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 <div id="home">
-    <a class="goUserinfo" href="./userinfo.html">
+    <a class="goUserinfo" href="./userinfo.html" style="display:none;">
         <i class="iconfont icon-tianjia"></i>
-        <div class="infoWarm">在出租车实名认证申请</div>
+        <div class="infoWarm">首都机场出租车实名认证申请
+        </div>
     </a>
-    <a class="homeList flexBetween" href="./userinfo.html" >
+    <div class="showUserinfo" style="display:none;">
+        <div class="flexBetween">
+            <div class="userInfo">
+                <div class="nameBox infoBox">姓名： <span class="name"></span></div>
+                <div class="cardNumBox infoBox">身份证号： <span class="cardNum"></span></div>
+                <div class="auditCompanyBox infoBox">所属公司： <span class="auditCompany"></span></div>
+                <div class="licenseNumBox infoBox">车牌号： <span class="licenseNum "></span></div>
+                <div class="engineNumBox infoBox">车架号 ： <span class="name"></span></div>
+            </div>
+            <div class="imgInfo">
+                <img class='cardPhotoUrl' alt='' src="">
+            </div>
+        </div>
+    </div>
+    <div class="showUserinfo" style="display:none;position: relative;">
+        <div  class="flex">
+            <img class='statusIcon' src="" alt="">
+            <div>
+                <p class="auditStatusName"></p>
+                <p class="validTimeBox">有效期至：<span class="validTime">-</span></p>
+            </div>
+        </div>
+        <a class="reApplay" style="display:none;" href="./userinfo.html"> 重新申请</a>
+        <div class="refresh" style="display:none;" onclick="refresh()"> 刷新状态</div>
+    </div>
+    <a class="homeList flexBetween zhinan" >
         <div class="leftBox">
             <p class="title">使用指南</p>
             <p class="titleText">出租车实名认证系统使用说明</p>
@@ -90,11 +168,101 @@
 </div>
 </body>
 <script>
+    var phone = '';
     window.onload = function() {
         document.addEventListener('message', function(msg) {
             var data = JSON.parse(msg.data)
             if(data.hasOwnProperty('phoneNum')){
+                phone = data.phoneNum;
                 localStorage.setItem('phone',data.phoneNum)
+            }
+        });
+    }
+
+    $(function(){
+        getDetail();
+    })
+    function refresh(){
+
+    }
+    function getDetail(){
+        var content = {
+            name: 'rrtr',
+            cardNum: 'fffdf',
+            licenseNum: 'dddfdfd',
+            engineNum: 'dfdfdf',
+            auditCompany: 'ddfdfd',
+            dataFlag: 2,
+            auditStatus: 4,
+            auditStatusName: '审核通过（数据同步成功）',
+            validTime: '2018年4月16日',
+            cardPhotoUrl: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1551180084&di=a4d7002da5f7ea9cbc0766ece8dccf23&src=http://pic35.photophoto.cn/20150509/0010023742301768_b.jpg',
+            companyList: [{companyCode:'1',companyName: '的姐姐姐夫'},{companyCode:'1',companyName: '的姐姐姐夫'},{companyCode:'1',companyName: '的姐姐姐夫'}]
+        };
+        $(".zhinan").attr("href",content.guideUrl);
+        localStorage.setItem('companyList',JSON.stringify(content.companyList))
+        if(content.dataFlag == 1 ){//有数据
+            $(".showUserinfo").css({'display':"block"});
+            $(".name").html(content.name);
+            $(".cardNum").html(content.cardNum)
+            $(".licenseNum ").html(content.licenseNum )
+            $(".engineNum ").html(content.engineNum )
+            $(".auditCompany").html(content.auditCompany)
+            $(".cardPhotoUrl").attr('src',content.cardPhotoUrl);
+            $(".auditStatusName").html(content.auditStatusName);
+            if(content.auditStatus == 4){
+                $(".validTime").html(content.validTime)
+                $(".statusIcon").attr("src",'./images/chenggong.jpg')
+            }else{
+                if(content.auditStatus == 5){
+                    $(".validTime").html(content.validTime)
+                }
+                $(".statusIcon").attr("src",'./images/fail.jpg')
+            }
+            if(content.auditStatus == 1 || content.auditStatus == 2 || content.auditStatus == 5){
+                $(".reApplay").css({'display':'block'})
+            }
+            if(content.auditStatus == 3){
+                $(".refresh").css({'display':'block'})
+            }
+        }
+        if(content.dataFlag == 2 ){//无数据
+            $(".goUserinfo").css({'display':"block"})
+        }
+        var data = {
+            phoneNum: phone
+        }
+        data = JSON.stringify(data)
+        $.ajax({
+            url: ajaxUrl + '/getTaxiInfo',
+            timeout: 3000,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            dataType: "json",
+            data:data,
+            success: function(response) {
+                if(response.rescode == 200){
+                    var content = response.data;
+                    $(".zhinan").attr("href",content.guideUrl);
+                    if(response.data.dataFlag == 1 ){//有数据
+                        $(".showUserinfo").css({'display':"block"});
+                        $(".name").html(content.name);
+                        $(".cardNum").html(content.cardNum)
+                        $(".licenseNum ").html(content.licenseNum )
+                        $(".engineNum ").html(content.engineNum )
+                        $(".auditCompany").html(content.auditCompany)
+                        $(".cardPhotoUrl").attr('src',content.cardPhotoUrl)
+                    }
+                    if(response.data.dataFlag == 2 ){//无数据
+                        $(".goUserinfo").css({'display':"block"})
+                    }
+                }else{
+                    tanwin(response.data.resdes)
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            },
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
             }
         });
     }
