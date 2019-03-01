@@ -255,6 +255,21 @@
             margin-top: 10px;
             line-height: 20px;
         }
+        .zhegaiceng {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .zhegaiceng .lodingimg {
+            position: absolute;
+            height: 60px;
+            width: 60px;
+            left: 0;
+            right: 0;
+            margin: 30vh auto;
+        }
     </style>
 </head>
 <body style="">
@@ -268,13 +283,13 @@
         </div>
         <input class='inputText' type="text" id='applicant'  placeholder="请输入申请人姓名"/>
     </div>
-    <div class="infoBox flexBetween">
-        <div class="inputLeft">
-            <span class="lableTextIcon">*</span>
-            <span class="lableText">手机号 :</span>
-        </div>
-        <input class='inputText' type="text" id='idPhone'  placeholder="请输入手机号"/>
-    </div>
+    <!--<div class="infoBox flexBetween">-->
+        <!--<div class="inputLeft">-->
+            <!--<span class="lableTextIcon">*</span>-->
+            <!--<span class="lableText">手机号 :</span>-->
+        <!--</div>-->
+        <!--<input class='inputText' type="text" id='idPhone' readonly placeholder="请输入手机号"/>-->
+    <!--</div>-->
     <div class="infoBox flexBetween">
         <div class="inputLeft">
             <span class="lableTextIcon">*</span>
@@ -291,22 +306,22 @@
             <option value="">请选择出租车公司</option>
         </select>
     </div>
-    <div class="infoBox flexBetween" id="carSpan">
-        <div class="inputLeft">
-            <span class="lableTextIcon">*</span>
-            <span class="lableText">准驾证号 :</span>
-        </div>
-        <div>
-            <span class="inputText showCarText" id="zhunjiaCode" onclick="$('#carCode').css({'display':'block'})">请输入准驾证号</span>
-        </div>
-    </div>
+    <!--<div class="infoBox flexBetween" >-->
+        <!--<div class="inputLeft">-->
+            <!--<span class="lableTextIcon">*</span>-->
+            <!--<span class="lableText">准驾证号 :</span>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<span class="inputText showCarText" id="zhunjiaCode" onclick="$('#carCode').css({'display':'block'})">请输入准驾证号</span>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="infoBox flexBetween"  id="carSpan">
         <div class="inputLeft">
             <span class="lableTextIcon">*</span>
             <span class="lableText">车牌号 :</span>
         </div>
         <div>
-            <span class='inputText showCarText' id="licenseNum" onclick="$('#carCode').css({'display':'block'})">请输入车牌号</span>
+            <span class='inputText showCarText' id="licenseNum" ontouchend="$('#carCode').css({'display':'block'})">请输入车牌号</span>
         </div>
     </div>
     <div class="infoBox" id='carCode' style="display: none;position: relative;border:none;padding: 0;">
@@ -347,10 +362,13 @@
             <img class="icon showImg" style="display: none;" src=""/>
         </div>
     </div> -->
-    <div class="submitInfo" onclick="submit()">提交并进行活体检测</div>
+    <div class="submitInfo" ontouchend="submit()">提交并进行活体检测</div>
     <div class="tips">
         温馨提示：每个用户每天最多可进行5次认证，请您仔细输入正确的信息
     </div>
+</div>
+<div class="zhegaicengone zhegaiceng" style="display: none;">
+    <img class='lodingimg' src="./images/loadingpop.gif">
 </div>
 <div id="tanwin" class="tan" style="display:none;"></div>
 </body>
@@ -379,8 +397,9 @@
     });
 </script>
 <script>
-    var phone = '17666143833',
+    var phone = '',
         userinfo = {
+            phoneNum:'',
             name: '',       // 姓名
             cardNum: '',    // 身份证号
             licenseNum: '', // 车牌号
@@ -388,7 +407,6 @@
             photoData: '',
             companyCode:'',
             photoList:[]
-
         },
         isShowthree = false,
         companyList = [],
@@ -400,10 +418,8 @@
         carId = '',
         carData = [],
         entourageList = [],
-            headerImage = '';
-        window.onbeforeunload = function(event) {
-            localStorage.removeItem('phone')
-        }
+        headerImage = '',
+         chapterUrl =  '';
     $(function(){
         var u = navigator.userAgent;
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android??
@@ -416,7 +432,9 @@
         }
         if(localStorage.getItem('phone')){
             phone = localStorage.getItem('phone');
+            // $("#idPhone").val(phone)
         }
+        // $("#idPhone").val(phone)
         getCompany();
         $("#company").on("change",function(){
             userinfo.company = $(this).find('option:selected').val();
@@ -442,10 +460,10 @@
             var data = JSON.parse(msg.data);
             if(data){
                 if(data.hasOwnProperty('imageData')){
-                    userinfo.chapterUrl = data.imageData;
-                    localStorage.setItem("url",userinfo.chapterUrl)
-                    if(userinfo.chapterUrl){
-                        isShowthree = true;
+                    chapterUrl = data.imageData;
+                    localStorage.setItem("url",chapterUrl)
+                    if(chapterUrl){
+                        $(".zhegaiceng").css({'display': 'block'})
                         sureJump()
                     }
                 }
@@ -497,18 +515,18 @@
         tab(".carcodeBox ");
         var strProvince = '';
         for(let item of provinceData){
-            strProvince+=' <a class="province"  onclick="selectItem(this)">'+item+'</a>'
+            strProvince+=' <a class="province"  ontouchend="selectItem(this)">'+item+'</a>'
         }
         $(".provinceBox").append(strProvince);
         var strNumber = '';
         for(let item of numData){
-            strNumber+=' <a class="province"  onclick="selectItem(this)">'+item+'</a>'
+            strNumber+=' <a class="province"  ontouchend="selectItem(this)">'+item+'</a>'
         }
         $(".numberBox").append(strNumber);
-        $(".sureCar").on("click",function(){
+        $(".sureCar").on("touchend",function(){
             $('#carCode').css({'display':'none'})
         })
-        $(".addCarInfo").on("click",function(){
+        $(".addCarInfo").on("touchend",function(){
             if(carData.length != 0){
                 $(".carTable").css({'display':"block"})
             }
@@ -518,11 +536,11 @@
             }
             var carNUm = $(".showCarText").text();
             if(carNUm){
-                if (carNUm.length == 7){
+                if (carNUm.length == 7 || carNUm.length == 8){
                         carData.push(carNUm);
                         carId = '';
                         $(".showCarText").text('请输入车牌号');
-                        var str = '<tr><td>'+carNUm+'</td><td data-id="'+carNUm+'" onclick="deleteItem(this)">删除</td></tr>'
+                        var str = '<tr><td>'+carNUm+'</td><td data-id="'+carNUm+'" ontouchend="deleteItem(this)">删除</td></tr>'
                         $(".carTableBox").append($(str))
                 }else{
                     tanwin(" 请输入正确车牌号");
@@ -565,14 +583,12 @@
             img.src = result;            //判断图片是否大于100K,是就直接上传，反之压缩图片
             if (reader.result.length <= (50 * 1024)) {
                 headerImage = result;
-                alert(headerImage)
                 postImg()
             } else {
                 img.onload = function () {
                     var orient = getPhotoOrientation(img);
                     let data = compress(img,orient);
                     headerImage = data;
-                    alert(headerImage)
                     if(data){
                         postImg();
                     }
@@ -656,6 +672,7 @@
             acceptName: name
         }
         data = JSON.stringify(data)
+
         $.ajax({
             url: ajaxUrl + 'getAcceptNameList',
             timeout: 3000,
@@ -695,32 +712,6 @@
             str+='<option value='+item.companyCode+'>'+item.companyName+'</option>';
         }
         $("#company").append(str);
-        return;
-        $.ajax({
-            url: ajaxUrl + 'getCompanyDept',
-            timeout: 3000,
-            type: 'post',
-            contentType: 'application/json;charset=utf-8',
-            dataType: "json",
-            data:data,
-            success: function(response) {
-                if(response.rescode == 200){
-                    companyList = response.companyList;
-                    var str='';
-                    for(let item of companyList){
-                        str+='<option value='+item.code+'>'+item.name+'</option>'
-                    }
-                    $("#company").append(str)
-
-                }else{
-                    tanwin(response.data.resdes)
-                }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-            },
-            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
-            }
-        });
     }
     function addPerson(){
             var companyName = $("#personName").val();
@@ -755,21 +746,53 @@
     function deletePerson(el){
         $(e.target).parent().remove()
     }
+    function sureJump(){
+        userinfo = {
+            name:  $('#applicant').val(),           // 姓名
+            phoneNum: phone,         // 手机号
+            cardNum: $('#idCard').val(),        // 身份证号
+            licenseNum: $('#licenseNum').html(),     // 车牌号
+            companyCode: $('#company').val(),    // 所属公司
+            engineNum : $('#chejiaCode').val(),     // 车架号
+            photoList: [],
+            photoData: chapterUrl,
+        };
+        userinfo = JSON.stringify(userinfo);
+//  调用出租车身份认证提交接口  /taxiforh5/submitTaxiInfo
+        $.ajax({
+            url: ajaxUrl + 'submitTaxiInfo',
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            dataType: "json",
+            data:userinfo,
+            success: function(response) {
+                $(".zhegaiceng").css({'display': 'none'})
+                if(response.rescode === '200'){
+                    window.location.href = './sucess.html'
+                }else{
+                    tanwin(response.resdes)
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $(".zhegaiceng").css({'display': 'none'})
+            },
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                $(".zhegaiceng").css({'display': 'none'})
+            }
+        });
+    };
     function submit(){
-        // window.postMessage('success');
+
+        //
         //  验证表单
         var flag = verfilFrom();
         if (!flag) return;
-        //  获取人像照片数据
-        var pritrue = 'base:64';
-        var name = $('#applicant').val();
-        var cardNum = $('#idCard').val();
-        var mobile = $('#idPhone').val();
-        var licenseNum = $('#licenseNum').val();
-        var companyCode = $('#company').val();
-        var chejiaCode = $('#chejiaCode').val();
-        var zhunjiaCode = $('#zhunjiaCode').val();
-        //  调用出租车身份认证提交接口  /taxiforh5/submitTaxiInfo
+        if(flag){
+            window.postMessage('success');
+        }
+
+
+
     }
     function verfilFrom() {
         var userinfo = {
@@ -783,15 +806,15 @@
         };
         var name = $('#applicant').val();
         var cardNum = $('#idCard').val();
-        var mobile = $('#idPhone').val();
-        var licenseNum = $('#licenseNum').val();
+        // var mobile = $('#idPhone').val();
+        var licenseNum = $('#licenseNum').html();
         var companyCode = $('#company').val();
         var chejiaCode = $('#chejiaCode').val();
         var zhunjiaCode = $('#zhunjiaCode').val();
 
         var regName =/^[\u4e00-\u9fa5]{2,20}$/;
         var regCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-        var regCheCard = /^[0-9A-Za-z]{1,8}$/;
+        // var regCheCard = /^[0-9A-Za-z]{1,8}$/;
         //  验证姓名
         if (!regName.test(name)) {
             tanwin('真实姓名填写有误');
@@ -802,23 +825,25 @@
             tanwin('身份证号填写有误');
             return false;
         }
-        //  验证车牌号
-        if (!regCheCard.test(licenseNum)) {
-            tanwin('车牌号填写有误');
-            return false;
-        }
+
         if (!companyCode) {
             tanwin('请选择所属公司');
+            return false;
+        }
+        console.log(licenseNum)
+        //  验证车牌号
+        if (!(licenseNum)) {
+            tanwin('车牌号填写有误');
             return false;
         }
         if (!chejiaCode) {
             tanwin('请填写车架号');
             return false;
         }
-        if (!zhunjiaCode) {
-            tanwin('请填写准驾证号');
-            return false;
-        }
+        // if (!zhunjiaCode) {
+        //     tanwin('请填写准驾证号');
+        //     return false;
+        // }
         return true;
     }
     function getName(ev) {
@@ -828,7 +853,7 @@
         $(".ulList").css({"display":'none'})
     }
     function selectItem(ev){
-        if(carId.length == 7){
+        if(carId.length == 7||carId.length == 8){
 
         }else{
             carId+=$(ev).text();

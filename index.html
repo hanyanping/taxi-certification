@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <link rel="stylesheet" type="text/css" href="./css/reset.css">
     <link rel="stylesheet" type="text/css" href="./js/iconfont.css">
-    <title>门禁管理系统</title>
+    <title>出租车</title>
     <style>
         #home{
             background: #f4f4f4;
@@ -114,6 +114,21 @@
             color: #2A5AE8;
             text-decoration-line: blink;
         }
+        .zhegaiceng {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .zhegaiceng .lodingimg {
+            position: absolute;
+            height: 60px;
+            width: 60px;
+            left: 0;
+            right: 0;
+            margin: 30vh auto;
+        }
     </style>
     <script src="./js/commen.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -166,14 +181,19 @@
         <i class="iconfont icon-lishijilu"></i>
     </a>
 </div>
+<div class="zhegaicengone zhegaiceng" style="display: none;">
+    <img class='lodingimg' src="./images/loadingpop.gif">
+</div>
 </body>
 <script>
-    var phone = '';
+    var phone = '17666143833';
+    var applyNum = '';
     window.onload = function() {
         document.addEventListener('message', function(msg) {
             var data = JSON.parse(msg.data)
             if(data.hasOwnProperty('phoneNum')){
                 phone = data.phoneNum;
+
                 localStorage.setItem('phone',data.phoneNum)
             }
         });
@@ -181,88 +201,96 @@
 
     $(function(){
         getDetail();
+
     })
     function refresh(){
-
-    }
-    function getDetail(){
-        var content = {
-            name: 'rrtr',
-            cardNum: 'fffdf',
-            licenseNum: 'dddfdfd',
-            engineNum: 'dfdfdf',
-            auditCompany: 'ddfdfd',
-            dataFlag: 2,
-            auditStatus: 4,
-            auditStatusName: '审核通过（数据同步成功）',
-            validTime: '2018年4月16日',
-            cardPhotoUrl: 'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1551180084&di=a4d7002da5f7ea9cbc0766ece8dccf23&src=http://pic35.photophoto.cn/20150509/0010023742301768_b.jpg',
-            companyList: [{companyCode:'1',companyName: '的姐姐姐夫'},{companyCode:'1',companyName: '的姐姐姐夫'},{companyCode:'1',companyName: '的姐姐姐夫'}]
-        };
-        $(".zhinan").attr("href",content.guideUrl);
-        localStorage.setItem('companyList',JSON.stringify(content.companyList))
-        if(content.dataFlag == 1 ){//有数据
-            $(".showUserinfo").css({'display':"block"});
-            $(".name").html(content.name);
-            $(".cardNum").html(content.cardNum)
-            $(".licenseNum ").html(content.licenseNum )
-            $(".engineNum ").html(content.engineNum )
-            $(".auditCompany").html(content.auditCompany)
-            $(".cardPhotoUrl").attr('src',content.cardPhotoUrl);
-            $(".auditStatusName").html(content.auditStatusName);
-            if(content.auditStatus == 4){
-                $(".validTime").html(content.validTime)
-                $(".statusIcon").attr("src",'./images/chenggong.jpg')
-            }else{
-                if(content.auditStatus == 5){
-                    $(".validTime").html(content.validTime)
-                }
-                $(".statusIcon").attr("src",'./images/fail.jpg')
-            }
-            if(content.auditStatus == 1 || content.auditStatus == 2 || content.auditStatus == 5){
-                $(".reApplay").css({'display':'block'})
-            }
-            if(content.auditStatus == 3){
-                $(".refresh").css({'display':'block'})
-            }
-        }
-        if(content.dataFlag == 2 ){//无数据
-            $(".goUserinfo").css({'display':"block"})
-        }
+        $(".zhegaiceng").css({'display': 'block'})
         var data = {
-            phoneNum: phone
+            phoneNum: phone,
+            applyNum: applyNum
         }
         data = JSON.stringify(data)
         $.ajax({
-            url: ajaxUrl + '/getTaxiInfo',
+            url: ajaxUrl + 'refreshStatus',
             timeout: 3000,
             type: 'post',
             contentType: 'application/json;charset=utf-8',
             dataType: "json",
             data:data,
             success: function(response) {
+                $(".zhegaiceng").css({'display': 'none'})
                 if(response.rescode == 200){
-                    var content = response.data;
+                    getDetail()
+                }else{
+                    tanwin(response.resdes)
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $(".zhegaiceng").css({'display': 'none'})
+            },
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                $(".zhegaiceng").css({'display': 'none'})
+            }
+        });
+    }
+    function getDetail(){
+        $(".zhegaiceng").css({'display': 'block'})
+        var data = {
+            phoneNum: phone
+        }
+        data = JSON.stringify(data)
+        $.ajax({
+            url: ajaxUrl + 'getTaxiInfo',
+            timeout: 3000,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            dataType: "json",
+            data:data,
+            success: function(response) {
+                $(".zhegaiceng").css({'display': 'none'})
+                if(response.rescode == 200){
+                    var content = response;
                     $(".zhinan").attr("href",content.guideUrl);
-                    if(response.data.dataFlag == 1 ){//有数据
+                    localStorage.setItem('companyList',JSON.stringify(content.companyList))
+                    if(content.dataFlag == 1 ){//有数据
+                        applyNum = content.applyNum;
                         $(".showUserinfo").css({'display':"block"});
                         $(".name").html(content.name);
                         $(".cardNum").html(content.cardNum)
                         $(".licenseNum ").html(content.licenseNum )
                         $(".engineNum ").html(content.engineNum )
                         $(".auditCompany").html(content.auditCompany)
-                        $(".cardPhotoUrl").attr('src',content.cardPhotoUrl)
+                        $(".cardPhotoUrl").attr('src',content.cardPhotoUrl);
+                        $(".auditStatusName").html(content.auditStatusName);
+                        $(".refresh").css({'display':'none'})
+                        if(content.auditStatus == 4){
+                            $(".validTime").html(content.validTime)
+                            $(".statusIcon").attr("src",'./images/chenggong.jpg')
+                        }else{
+                            if(content.auditStatus == 5){
+                                $(".validTime").html(content.validTime)
+                            }
+                            $(".statusIcon").attr("src",'./images/fail.jpg')
+                        }
+                        if(content.auditStatus == 1 || content.auditStatus == 2 || content.auditStatus == 5){
+                            $(".reApplay").css({'display':'block'})
+                        }
+                        if(content.auditStatus == 3){
+                            $(".refresh").css({'display':'block'})
+                        }
                     }
-                    if(response.data.dataFlag == 2 ){//无数据
+                    if(content.dataFlag == 2 ){//无数据
                         $(".goUserinfo").css({'display':"block"})
                     }
                 }else{
-                    tanwin(response.data.resdes)
+                    tanwin(response.resdes)
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $(".zhegaiceng").css({'display': 'none'})
             },
             complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                $(".zhegaiceng").css({'display': 'none'})
             }
         });
     }
