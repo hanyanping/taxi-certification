@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <link rel="stylesheet" type="text/css" href="./css/reset.css">
     <link rel="stylesheet" type="text/css" href="./js/iconfont.css">
-    <title>出租车</title>
+    <title>出租车实名认证系统
+    </title>
     <style>
         #home{
             background: #f4f4f4;
@@ -74,6 +75,8 @@
         }
         .userInfo .infoBox{
             padding: 5px 0;
+            font-size:14px;
+            flex-wrap: wrap;
         }
         .imgInfo .cardPhotoUrl{
             width: 101px;
@@ -129,9 +132,26 @@
             right: 0;
             margin: 30vh auto;
         }
+        .nameLable{
+            min-width: 70px;
+            max-width: 70px;
+            display: inline-block;
+            text-align: left;
+        }
+        .nameText{
+            text-align: left;
+            display: inline-block;
+            min-width: 108px;
+            max-width: 150px;
+            word-break: break-all;
+        }
     </style>
     <script src="./js/commen.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var now = new Date().getTime();
+        document.write('<script language="javascript" src="./js/index.js?t=' + now + '"><\/script\>');
+    </script>
 </head>
 <body>
 <div id="home">
@@ -143,11 +163,11 @@
     <div class="showUserinfo" style="display:none;">
         <div class="flexBetween">
             <div class="userInfo">
-                <div class="nameBox infoBox">姓名： <span class="name"></span></div>
-                <div class="cardNumBox infoBox">身份证号： <span class="cardNum"></span></div>
-                <div class="auditCompanyBox infoBox">所属公司： <span class="auditCompany"></span></div>
-                <div class="licenseNumBox infoBox">车牌号： <span class="licenseNum "></span></div>
-                <div class="engineNumBox infoBox">车架号 ： <span class="name"></span></div>
+                <div class="nameBox infoBox flex"><span class="nameLable">姓名:</span> <span class="name nameText"></span></div>
+                <div class="cardNumBox infoBox flex"><span class="nameLable">身份证号:</span> <span class="cardNum nameText"></span></div>
+                <div class="auditCompanyBox infoBox flex" ><span class="nameLable">所属公司: </span><span class="auditCompany nameText"></span></div>
+                <div class="licenseNumBox infoBox flex"><span class="nameLable">车牌号:</span> <span class="licenseNum nameText"></span></div>
+                <div class="engineNumBox infoBox flex"><span class="nameLable">车架号:</span> <span class="engineNum  nameText"></span></div>
             </div>
             <div class="imgInfo">
                 <img class='cardPhotoUrl' alt='' src="">
@@ -185,114 +205,5 @@
     <img class='lodingimg' src="./images/loadingpop.gif">
 </div>
 </body>
-<script>
-    var phone = '17666143833';
-    var applyNum = '';
-    window.onload = function() {
-        document.addEventListener('message', function(msg) {
-            var data = JSON.parse(msg.data)
-            if(data.hasOwnProperty('phoneNum')){
-                phone = data.phoneNum;
 
-                localStorage.setItem('phone',data.phoneNum)
-            }
-        });
-    }
-
-    $(function(){
-        getDetail();
-
-    })
-    function refresh(){
-        $(".zhegaiceng").css({'display': 'block'})
-        var data = {
-            phoneNum: phone,
-            applyNum: applyNum
-        }
-        data = JSON.stringify(data)
-        $.ajax({
-            url: ajaxUrl + 'refreshStatus',
-            timeout: 3000,
-            type: 'post',
-            contentType: 'application/json;charset=utf-8',
-            dataType: "json",
-            data:data,
-            success: function(response) {
-                $(".zhegaiceng").css({'display': 'none'})
-                if(response.rescode == 200){
-                    getDetail()
-                }else{
-                    tanwin(response.resdes)
-                }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                $(".zhegaiceng").css({'display': 'none'})
-            },
-            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
-                $(".zhegaiceng").css({'display': 'none'})
-            }
-        });
-    }
-    function getDetail(){
-        $(".zhegaiceng").css({'display': 'block'})
-        var data = {
-            phoneNum: phone
-        }
-        data = JSON.stringify(data)
-        $.ajax({
-            url: ajaxUrl + 'getTaxiInfo',
-            timeout: 3000,
-            type: 'post',
-            contentType: 'application/json;charset=utf-8',
-            dataType: "json",
-            data:data,
-            success: function(response) {
-                $(".zhegaiceng").css({'display': 'none'})
-                if(response.rescode == 200){
-                    var content = response;
-                    $(".zhinan").attr("href",content.guideUrl);
-                    localStorage.setItem('companyList',JSON.stringify(content.companyList))
-                    if(content.dataFlag == 1 ){//有数据
-                        applyNum = content.applyNum;
-                        $(".showUserinfo").css({'display':"block"});
-                        $(".name").html(content.name);
-                        $(".cardNum").html(content.cardNum)
-                        $(".licenseNum ").html(content.licenseNum )
-                        $(".engineNum ").html(content.engineNum )
-                        $(".auditCompany").html(content.auditCompany)
-                        $(".cardPhotoUrl").attr('src',content.cardPhotoUrl);
-                        $(".auditStatusName").html(content.auditStatusName);
-                        $(".refresh").css({'display':'none'})
-                        if(content.auditStatus == 4){
-                            $(".validTime").html(content.validTime)
-                            $(".statusIcon").attr("src",'./images/chenggong.jpg')
-                        }else{
-                            if(content.auditStatus == 5){
-                                $(".validTime").html(content.validTime)
-                            }
-                            $(".statusIcon").attr("src",'./images/fail.jpg')
-                        }
-                        if(content.auditStatus == 1 || content.auditStatus == 2 || content.auditStatus == 5){
-                            $(".reApplay").css({'display':'block'})
-                        }
-                        if(content.auditStatus == 3){
-                            $(".refresh").css({'display':'block'})
-                        }
-                    }
-                    if(content.dataFlag == 2 ){//无数据
-                        $(".goUserinfo").css({'display':"block"})
-                    }
-                }else{
-                    tanwin(response.resdes)
-                }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                $(".zhegaiceng").css({'display': 'none'})
-            },
-            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
-                $(".zhegaiceng").css({'display': 'none'})
-            }
-        });
-    }
-</script>
 </html>
